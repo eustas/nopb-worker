@@ -4,6 +4,8 @@ import java.util.Objects;
 
 /**
  * The worker sends this message to Blaze when it finished its work on the WorkRequest message.
+ *
+ * This class is a replacement for com.google.devtools.build.lib.worker.WorkResponse protobuf.
  */
 public class WorkResponse {
   public int exitCode;

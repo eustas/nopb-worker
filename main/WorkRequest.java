@@ -6,6 +6,8 @@ import java.util.Objects;
 
 /**
  * This represents a single work unit that Blaze sends to the worker.
+ * 
+ * This class is a replacement for com.google.devtools.build.lib.worker.WorkRequest protobuf.
  */
 public class WorkRequest {
   /**
