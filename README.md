@@ -22,8 +22,8 @@ load("@bazel_tools//tools/build_defs/repo:http.bzl", "http_jar")
 
 http_jar (
     name = "nopb-worker",
-    url = "https://TBD/nopb-worker.jar",
-    sha256 = "TBD",
+    url = "https://github.com/eustas/nopb-worker/releases/download/v0.9.0/nopb-worker.jar",
+    sha256 = "5f51edbe43e16d38acec7a0dc1ccd7eab2f59e65205b69153b7b8b94a4393daf",
 )
 ```
 
