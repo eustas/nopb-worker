@@ -1,5 +1,7 @@
 package ru.eustas.nopbworker;
 
+import java.util.Objects;
+
 /**
  * The worker sends this message to Blaze when it finished its work on the WorkRequest message.
  */
@@ -32,4 +34,22 @@ public class WorkResponse {
    * one where was_cancelled = true.
    */
   public boolean wasCancelled;
+
+  @Override
+  public boolean equals(Object o) {
+    if (o == this) {
+      return true;
+    }
+    if (!(o instanceof WorkResponse)) {
+      return false;
+    }
+    WorkResponse other = (WorkResponse) o;
+    return exitCode == other.exitCode && Objects.equals(output, other.output)
+        && requestId == other.requestId && wasCancelled == other.wasCancelled;
+  }
+
+  @Override
+  public int hashCode() {
+    return Objects.hash(exitCode, output, requestId, wasCancelled);
+  }
 }

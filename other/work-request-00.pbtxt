@@ -1,0 +1,6 @@
+arguments: ["кот ломом колол слона", "слон серый полосатый"]
+inputs: [
+  {path: "foo/bar.txt", digest: "abcdef"},
+  {path: "baz.txt", digest: "ghijkl"}
+]
+request_id: 42

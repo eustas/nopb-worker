@@ -1,7 +1,8 @@
 package ru.eustas.nopbworker;
 
 import java.util.ArrayList;
-import java.util.List;
+import java.util.Arrays;
+import java.util.Objects;
 
 /**
  * This represents a single work unit that Blaze sends to the worker.
@@ -26,14 +27,31 @@ public class WorkRequest {
      * token.
      */
     public byte[] digest = new byte[0];
+
+    @Override
+    public boolean equals(Object o) {
+      if (o == this) {
+        return true;
+      }
+      if (!(o instanceof Input)) {
+        return false;
+      }
+      Input other = (Input) o;
+      return Objects.equals(path, other.path) && Arrays.equals(digest, other.digest);
+    }
+  
+    @Override
+    public int hashCode() {
+      return Objects.hash(path, Arrays.hashCode(digest));
+    }  
   }
 
-  public List<String> arguments = new ArrayList<>();
+  public ArrayList<String> arguments = new ArrayList<>();
 
   /**
    * The inputs that the worker is allowed to read during execution of this request.
    */
-  public List<Input> inputs = new ArrayList<>();
+  public ArrayList<Input> inputs = new ArrayList<>();
 
   /**
    * Each WorkRequest must have either a unique request_id or request_id = 0.
@@ -47,9 +65,28 @@ public class WorkRequest {
   public int requestId;
 
   /**
-   * EXPERIMENTAL: When true, this is a cancel request, indicating that a previously sent WorkRequest with the same request_id should be cancelled.
+   * EXPERIMENTAL: When true, this is a cancel request, indicating that a previously sent
+   * WorkRequest with the same request_id should be cancelled.
    *
    * The arguments and inputs fields must be empty and should be ignored.
    */
   public boolean cancel;
+
+  @Override
+  public boolean equals(Object o) {
+    if (o == this) {
+      return true;
+    }
+    if (!(o instanceof WorkRequest)) {
+      return false;
+    }
+    WorkRequest other = (WorkRequest) o;
+    return Objects.equals(arguments, other.arguments) && Objects.equals(inputs, other.inputs)
+        && requestId == other.requestId && cancel == other.cancel;
+  }
+
+  @Override
+  public int hashCode() {
+    return Objects.hash(arguments, inputs, requestId, cancel);
+  }
 }

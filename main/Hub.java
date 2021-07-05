@@ -2,7 +2,7 @@ package ru.eustas.nopbworker;
 
 import java.io.IOException;
 import java.io.InputStream;
-import java.io.PrintStream;
+import java.io.OutputStream;
 import java.nio.charset.StandardCharsets;
 import ru.eustas.nopbworker.WorkRequest.Input;
 
@@ -223,20 +223,19 @@ public class Hub {
   }
 
   private static class Writer {
-    final PrintStream out;
-    private final byte[] buffer = new byte[25];
+    final OutputStream out;
+    private final byte[] buffer = new byte[35];
     int pos;
-    Writer(PrintStream out) {
+    Writer(OutputStream out) {
       this.out = out;
     }
 
-    void encodeInt(int value) {
-      int numBits = 32 - Integer.numberOfLeadingZeros(value);
+    void encodeInt(long value) {
+      int numBits = 64 - Long.numberOfLeadingZeros(value);
       int numBytes = Math.max(1, (numBits + 6) / 7);
       for (int i = 0; i < numBytes; ++i) {
-        int b = (i + 1 < numBytes) ? 0 : 0x80;
-        b |= value & 0x7F;
-        value >>= 7;
+        int b = (i + 1 < numBytes) ? 0x80 : 0;
+        b |= (value >>> (7 * i)) & 0x7F;
         buffer[pos++] = (byte) b;
       }
     }
@@ -244,19 +243,26 @@ public class Hub {
     synchronized void write(WorkResponse obj) throws IOException {
       String output = (obj.output == null) ? "" : obj.output;
       byte[] outputBytes = output.getBytes(StandardCharsets.UTF_8);
-
       pos = 5;
-      encodeInt(8);  // exitCode: id = 1, wire-type = 0
-      encodeInt(obj.exitCode);
-      // output: potsponed
-      encodeInt(24);  // requestId: id = 3, wire-type = 0
-      encodeInt(obj.requestId);
-      encodeInt(32);  // wasCancelled: id = 4, wire-type = 0
-      encodeInt(obj.wasCancelled ? 1 : 0);
-      encodeInt(32);  // wasCancelled: id = 4, wire-type = 0
+
+      if (obj.exitCode != 0) {
+        encodeInt(8);  // exitCode: id = 1, wire-type = 0
+        encodeInt(obj.exitCode);
+      }
+
       encodeInt(18);  // output: id = 2, wire-type = 2
       encodeInt(outputBytes.length);
-      // Output itself is dumped separately.
+      int stop = pos; // Output itself is dumped separately.
+  
+      if (obj.requestId != 0) {
+        encodeInt(24);  // requestId: id = 3, wire-type = 0
+        encodeInt(obj.requestId);
+      }
+
+      if (obj.wasCancelled) {
+        encodeInt(32);  // wasCancelled: id = 4, wire-type = 0
+        encodeInt(obj.wasCancelled ? 1 : 0);
+      }
 
       int lastPos = pos;
       int encodedLength = lastPos - 5;
@@ -267,8 +273,9 @@ public class Hub {
         buffer[--newPos] = buffer[--pos];
       }
 
-      out.write(buffer, newPos, lastPos - newPos);
+      out.write(buffer, newPos, stop - newPos);
       out.write(outputBytes);
+      out.write(buffer, stop, lastPos - stop);
       out.flush();
     }
   }
@@ -276,7 +283,7 @@ public class Hub {
   private final Reader reader;
   private final Writer writer;
 
-  public Hub(InputStream in, PrintStream out) {
+  public Hub(InputStream in, OutputStream out) {
     this.reader = new Reader(in);
     this.writer = new Writer(out);
   }
