@@ -36,7 +36,7 @@ http_jar (
  ]
 ```
 
-Create and use "Hub" in code, e.g:
+3. Create and use "Hub" in code, e.g.:
 ```java
 import ru.eustas.nopbworker.Hub;
 import ru.eustas.nopbworker.WorkRequest;
