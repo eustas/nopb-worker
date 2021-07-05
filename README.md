@@ -1,6 +1,6 @@
 ### Introduction
 
-This small (8KiB) standalone (i.e. without dependencies) library provides a lightweight
+This small (under 8KiB) standalone (i.e. without dependencies) library provides a lightweight
 alternative to using
 [Protocol Buffers](https://developers.google.com/protocol-buffers) for
 [Bazel Persistent Workers](https://docs.bazel.build/versions/main/persistent-workers.html).
@@ -16,8 +16,31 @@ placed in different package and are POJOs (plain-old-Java-objects). Thus there a
 
 ### Usage
 
-Simple use example would be:
+1. Put the following snippet to `WORKSPACE` file:
+```
+load("@bazel_tools//tools/build_defs/repo:http.bzl", "http_jar")
+
+http_jar (
+    name = "nopb-worker",
+    url = "https://TBD/nopb-worker.jar",
+    sha256 = "TBD",
+)
+```
+
+2. Add dependency in `BUILD` file:
+```
+ deps = [
+   ...
+   "@nopb-worker//jar",
+   ...
+ ]
+```
+
+Create and use "Hub" in code, e.g:
 ```java
+import ru.eustas.nopbworker.Hub;
+import ru.eustas.nopbworker.WorkRequest;
+import ru.eustas.nopbworker.WorkResponse;
   ...
   Hub hub = new Hub(System.in, System.out);
   ...
