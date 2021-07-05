@@ -9,7 +9,7 @@ java_test(
     ],
     test_class = "ru.eustas.nopbworker.ReaderTest",  # ridiculous
     deps = [
-        "//main:nopbworker",
+        "//main:nopb-worker",
         "@jakarta_json_bind_api//jar",
         "@junit4//jar",
         "@org_eclipse_yasson//jar",
@@ -20,14 +20,14 @@ java_test(
 java_test(
     name = "WriterTest",
     srcs = ["WriterTest.java"],
-    test_class = "ru.eustas.nopbworker.WriterTest",  # ridiculous
     data = [
         "work-response.bin",
         "work-response-00.json",
         "work-response-01.json",
     ],
+    test_class = "ru.eustas.nopbworker.WriterTest",  # ridiculous
     deps = [
-        "//main:nopbworker",
+        "//main:nopb-worker",
         "@jakarta_json_bind_api//jar",
         "@junit4//jar",
         "@org_eclipse_yasson//jar",

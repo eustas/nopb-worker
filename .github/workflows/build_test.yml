@@ -1,0 +1,33 @@
+name: Build / test
+on: [push]
+jobs:
+
+  bazel:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Set Environment Variables
+        run: |
+          echo "ARTIFACTS_DIR=${RUNNER_TEMP}/artifacts" >> ${GITHUB_ENV}
+
+      - uses: actions/checkout@v2
+
+      - uses: bazelbuild/setup-bazelisk@v1
+
+      - name: Build
+        run: |
+          bazel build -c opt ...:all
+
+      - name: Test
+        run: |
+          bazel test -c opt --test_output=errors ...:all
+
+      - name: Collect Artifacts
+        run: |
+          mkdir -p ${ARTIFACTS_DIR}/
+          cp ${${GITHUB_WORKSPACE}}/bazel-bin/main/libnopb-worker.jar ${ARTIFACTS_DIR}/nopb-worker.jar
+
+      - uses: actions/upload-artifact@v2
+        with:
+          name: jar
+          path: ${{ env.ARTIFACTS_DIR }}
+          if-no-files-found: error

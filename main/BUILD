@@ -3,7 +3,7 @@ package(default_visibility = ["//visibility:public"])
 licenses(["notice"])  # MIT
 
 java_library(
-    name = "nopbworker",
+    name = "nopb-worker",
     srcs = [
         "Hub.java",
         "WorkRequest.java",
