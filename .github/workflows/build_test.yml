@@ -13,6 +13,9 @@ jobs:
 
       - uses: bazelbuild/setup-bazelisk@v1
 
+      - name: Install tools
+        run: sudo apt-get install advancecomp
+
       - name: Build
         run: |
           bazel build -c opt ...:all
@@ -25,6 +28,7 @@ jobs:
         run: |
           mkdir -p ${ARTIFACTS_DIR}/
           cp ${GITHUB_WORKSPACE}/bazel-bin/main/libnopb-worker.jar ${ARTIFACTS_DIR}/nopb-worker.jar
+          advzip -z -4 -i 300 ${ARTIFACTS_DIR}/nopb-worker.jar
 
       - uses: actions/upload-artifact@v2
         with:
