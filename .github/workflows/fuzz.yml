@@ -20,4 +20,11 @@ jobs:
       - name: Fuzz
         run: |
           cd ${GITHUB_WORKSPACE}/fuzz
-          bazel run --config=jazzer //:ReaderFuzzer_run
+          bazel run --config=jazzer //:ReaderFuzzer_run -- --timeout_secs=600
+
+      - uses: actions/upload-artifact@v2
+        with:
+          name: corpus
+          path: /tmp/fuzzing
+          if-no-files-found: error
+
