@@ -12,7 +12,12 @@ jobs:
       - name: Install deps
         run: sudo apt-get install clang libunwind-dev libblocksruntime-dev
 
-      - name: Build & Fuzz
+      - name: Build
         run: |
-          cd fuzz
-          bazel run --config=jazzer //:ReaderFuzzer_run
+          cd ${GITHUB_WORKSPACE}/fuzz
+          bazel build --config=jazzer //:ReaderFuzzer_run
+
+      - name: Fuzz
+        run: |
+          cd ${GITHUB_WORKSPACE}/fuzz
+          bazel run --config=jazzer //:ReaderFuzzer_run --timeout_secs=3600

@@ -214,7 +214,6 @@ public class Hub {
           }
           readVarint(limit);
           checkLength(limit);
-          System.out.println(pos + " " + varint);
           obj.path = new String(buffer, pos, (int) varint, StandardCharsets.UTF_8);
           pos += (int) varint;
         } else if (id == 2) { // digest
