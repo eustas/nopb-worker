@@ -23,6 +23,8 @@ jobs:
       - name: Test
         run: |
           bazel test -c opt --test_output=errors ...:all
+          cd ${GITHUB_WORKSPACE}/fuzz
+          bazel test :TrophiesTest
 
       - name: Collect Artifacts
         run: |

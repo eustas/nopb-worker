@@ -20,4 +20,4 @@ jobs:
       - name: Fuzz
         run: |
           cd ${GITHUB_WORKSPACE}/fuzz
-          bazel run --config=jazzer //:ReaderFuzzer_run --timeout_secs=3600
+          bazel run --config=jazzer //:ReaderFuzzer_run
