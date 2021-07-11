@@ -155,7 +155,7 @@ public class Hub {
      * @param limit first byte after current (sub-)message position
      */
     void checkLength(int limit) throws IOException {
-      if ((varint > MESSAGE_SIZE_CAP) || (pos + (int) varint > limit)) {
+      if ((varint < 0) || (varint > MESSAGE_SIZE_CAP) || (pos + (int) varint > limit)) {
         markBroken();  // Incomplete message.
       }
     }
@@ -214,6 +214,7 @@ public class Hub {
           }
           readVarint(limit);
           checkLength(limit);
+          System.out.println(pos + " " + varint);
           obj.path = new String(buffer, pos, (int) varint, StandardCharsets.UTF_8);
           pos += (int) varint;
         } else if (id == 2) { // digest

@@ -6,3 +6,16 @@ java_fuzz_test(
     deps = ["@main//main:nopb-worker"],
     target_class = "ru.eustas.nopbworker.ReaderFuzzer",
 )
+
+java_test(
+    name = "TrophiesTest",
+    srcs = [
+        "ReaderFuzzer.java",
+        "TrophiesTest.java"
+    ],
+    test_class = "ru.eustas.nopbworker.TrophiesTest",  # ridiculous
+    deps = [
+        "@main//main:nopb-worker",
+        "@junit4//jar",
+    ],
+)
