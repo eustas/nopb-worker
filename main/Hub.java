@@ -21,9 +21,9 @@ public class Hub {
     /**
      * Single message (work request) serializes size limit.
      * 
-     * <p>1GiB should be enough for any sane input.
+     * <p>256MiB should be enough for any sane input.
      */
-    private static final long MESSAGE_SIZE_CAP = 1 << 30;
+    private static final long MESSAGE_SIZE_CAP = 1 << 28;
 
     /**
      * Source.
