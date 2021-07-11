@@ -108,8 +108,8 @@ public class Hub {
           break;
         }
       }
-      if (length > MESSAGE_SIZE_CAP) {
-        markBroken();  // Message is too long.
+      if ((result < 0) || (result > MESSAGE_SIZE_CAP)) {
+        markBroken();  // Message is too long / negative length.
       }
       size = (int) result;
       return true;
