@@ -9,6 +9,13 @@ jobs:
 
       - uses: bazelbuild/setup-bazelisk@v1
 
+      - name: Cache corpus
+        id: cache-corpus
+        uses: actions/cache@v2
+        with:
+          path: ${{ runner.temp }}/fuzzing-corpus
+          key: corpus
+
       - name: Install deps
         run: sudo apt-get install clang libunwind-dev libblocksruntime-dev
 
@@ -20,11 +27,9 @@ jobs:
       - name: Fuzz
         run: |
           cd ${GITHUB_WORKSPACE}/fuzz
-          bazel run --config=jazzer //:ReaderFuzzer_run -- --timeout_secs=600
-
-      - uses: actions/upload-artifact@v2
-        with:
-          name: corpus
-          path: /tmp/fuzzing
-          if-no-files-found: error
-
+          mkdir -p ${RUNNER_TEMP}/fuzzing-corpus
+          bazel run --config=jazzer //:ReaderFuzzer_run -- \
+            --timeout_secs=300 \
+            --fuzzing_output_root=${RUNNER_TEMP}/new-corpus \
+            --corpus_dir=${RUNNER_TEMP}/fuzzing-corpus
+          cp ${RUNNER_TEMP}/new-corpus/* ${RUNNER_TEMP}/fuzzing-corpus/
