@@ -32,6 +32,4 @@ jobs:
             --timeout_secs=150 \
             --fuzzing_output_root=${RUNNER_TEMP}/new-corpus \
             --corpus_dir=${RUNNER_TEMP}/fuzzing-corpus
-          ls -R ${RUNNER_TEMP}/new-corpus
-          cp ${RUNNER_TEMP}/new-corpus/artifacts/* ${RUNNER_TEMP}/fuzzing-corpus/
           cp ${RUNNER_TEMP}/new-corpus/corpus/* ${RUNNER_TEMP}/fuzzing-corpus/
