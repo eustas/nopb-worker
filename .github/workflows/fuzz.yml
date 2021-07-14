@@ -15,7 +15,7 @@ jobs:
       - name: Build
         run: |
           cd ${GITHUB_WORKSPACE}/fuzz
-          bazel build --config=jazzer //:ReaderFuzzer_run
+          bazel build --config=jazzer //:Fuzzer_run
 
       - name: Fuzz
         run: |
@@ -24,7 +24,7 @@ jobs:
           git clone --branch fuzzer-corpus --depth=1 https://github.com/eustas/nopb-worker.git
           unzip nopb-worker/corpus.zip -d ${RUNNER_TEMP}/fuzzing-corpus
           cd ${GITHUB_WORKSPACE}/fuzz
-          bazel run --config=jazzer //:ReaderFuzzer_run -- \
+          bazel run --config=jazzer //:Fuzzer_run -- \
             --timeout_secs=21000 \
             --fuzzing_output_root=${RUNNER_TEMP}/new-corpus \
             --corpus_dir=${RUNNER_TEMP}/fuzzing-corpus
