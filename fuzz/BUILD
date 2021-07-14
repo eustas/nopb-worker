@@ -4,7 +4,7 @@ java_fuzz_test(
     name = "Fuzzer",
     srcs = ["Fuzzer.java"],
     deps = ["@main//main:nopb-worker"],
-    target_class = "ru.eustas.nopbworker.ReaderFuzzer",
+    target_class = "ru.eustas.nopbworker.Fuzzer",  # ridiculous
 )
 
 java_test(
