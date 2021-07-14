@@ -198,7 +198,7 @@ public class Hub {
     }
 
     /**
-     * "Input" submessage parsing loop.
+     * "Input" sub-message parsing loop.
      * 
      * @param obj output object (to fill with data)
      * @param limit first byte after current (sub-)message position
@@ -232,7 +232,7 @@ public class Hub {
     }
 
     /**
-     * "WorkRequest" submessage parsing loop.
+     * "WorkRequest" sub-message parsing loop.
      * 
      * @param obj output object (to fill with data)
      */
@@ -420,7 +420,7 @@ public class Hub {
       int encodedLength = lastPos - 5;
       // Serialize message size.
       pos = 0;
-      encodeInt(encodedLength + outputBytes.length);
+      encodeInt((long) encodedLength + outputBytes.length);
       // Move serialized message size to make it stick to main part.
       int newPos = 5;
       while (pos > 0) {
@@ -462,7 +462,7 @@ public class Hub {
    * <p>Method is synchronized / blocking, so it is safe to request read from multiple threads.
    * 
    * @return {@code null} if no more messages are encoded in stream, otherwise next parsed work item
-   * @throws IOExeption if reading stream causes it, parsing fails (corrupted stream), or either of
+   * @throws IOException if reading stream causes it, parsing fails (corrupted stream), or either of
    *                    those happened in previous invocation
    */
   public WorkRequest readRequest() throws IOException {

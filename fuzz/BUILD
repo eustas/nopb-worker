@@ -1,8 +1,8 @@
 load("@rules_fuzzing//fuzzing:java_defs.bzl", "java_fuzz_test")
 
 java_fuzz_test(
-    name = "ReaderFuzzer",
-    srcs = ["ReaderFuzzer.java"],
+    name = "Fuzzer",
+    srcs = ["Fuzzer.java"],
     deps = ["@main//main:nopb-worker"],
     target_class = "ru.eustas.nopbworker.ReaderFuzzer",
 )
@@ -10,7 +10,7 @@ java_fuzz_test(
 java_test(
     name = "TrophiesTest",
     srcs = [
-        "ReaderFuzzer.java",
+        "Fuzzer.java",
         "TrophiesTest.java"
     ],
     test_class = "ru.eustas.nopbworker.TrophiesTest",  # ridiculous

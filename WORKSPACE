@@ -6,6 +6,12 @@ local_repository(
     path = "fuzz",
 )
 
+# Make fuzzer "conformance" independent.
+local_repository(
+    name = "ignore_conformance",
+    path = "conformance",
+)
+
 http_jar (
     name = "junit4",
     url = "https://repo1.maven.org/maven2/junit/junit/4.13.2/junit-4.13.2.jar",
