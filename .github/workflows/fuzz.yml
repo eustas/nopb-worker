@@ -25,7 +25,7 @@ jobs:
           unzip nopb-worker/corpus.zip -d ${RUNNER_TEMP}/fuzzing-corpus
           cd ${GITHUB_WORKSPACE}/fuzz
           bazel run --config=jazzer //:Fuzzer_run -- \
-            --timeout_secs=21000 \
+            --timeout_secs=600 \
             --fuzzing_output_root=${RUNNER_TEMP}/new-corpus \
             --corpus_dir=${RUNNER_TEMP}/fuzzing-corpus
 
