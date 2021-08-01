@@ -1,5 +1,6 @@
 package ru.eustas.nopbworker;
 
+import com.google.devtools.build.lib.worker.WorkerProtocol;
 import java.io.ByteArrayInputStream;
 import java.io.ByteArrayOutputStream;
 import java.io.IOException;
@@ -38,8 +39,7 @@ public class ConformanceChecker {
   }
 
   static void checkRequest(ByteBuffer input) throws IOException {
-    com.google.devtools.build.lib.worker.WorkerProtocol.WorkRequest.Builder origBuilder =
-        com.google.devtools.build.lib.worker.WorkerProtocol.WorkRequest.newBuilder();
+    WorkerProtocol.WorkRequest.Builder origBuilder = WorkerProtocol.WorkRequest.newBuilder();
     try {
       Random rng = new Random(input.getLong());
       origBuilder.setRequestId(input.getInt());
@@ -50,8 +50,7 @@ public class ConformanceChecker {
       }
       int numInputs = readNumber(input, 10);
       for (int i = 0; i < numInputs; ++i) {
-        com.google.devtools.build.lib.worker.WorkerProtocol.Input.Builder inputBuilder =
-            com.google.devtools.build.lib.worker.WorkerProtocol.Input.newBuilder();
+        WorkerProtocol.Input.Builder inputBuilder = WorkerProtocol.Input.newBuilder();
         inputBuilder.setPath(new String(makeBlob(rng, input, 12), StandardCharsets.UTF_8));
         inputBuilder.setDigest(com.google.protobuf.ByteString.copyFrom(makeBlob(rng, input, 8)));
         origBuilder.addInputs(inputBuilder);
@@ -60,7 +59,7 @@ public class ConformanceChecker {
       // Okay, input is too short.
       return;
     }
-    com.google.devtools.build.lib.worker.WorkerProtocol.WorkRequest orig = origBuilder.build();
+    WorkerProtocol.WorkRequest orig = origBuilder.build();
 
     ByteArrayOutputStream serialized = new ByteArrayOutputStream();
     orig.writeDelimitedTo(serialized);
@@ -97,8 +96,7 @@ public class ConformanceChecker {
       int numInputs = deserialized.inputs.size();
       for (int i = 0; i < numInputs; ++i) {
         WorkRequest.Input deserializedInput = deserialized.inputs.get(i);
-        com.google.devtools.build.lib.worker.WorkerProtocol.Input origInput =
-            orig.getInputsList().get(i);
+        WorkerProtocol.Input origInput = orig.getInputsList().get(i);
         if (!Objects.equals(deserializedInput.path, origInput.getPath()) ||
             !Objects.deepEquals(deserializedInput.digest, origInput.getDigest().toByteArray())) {
           throw new RuntimeException("Deserilized object does not match original one");
@@ -125,7 +123,7 @@ public class ConformanceChecker {
     hub.writeResponse(orig);
 
     ByteArrayInputStream serialized = new ByteArrayInputStream(baos.toByteArray());
-    var deserialized = com.google.devtools.build.lib.worker.WorkerProtocol.WorkResponse.parseDelimitedFrom(serialized);
+    WorkerProtocol.WorkResponse deserialized = WorkerProtocol.WorkResponse.parseDelimitedFrom(serialized);
     if (serialized.available() != 0) {
       throw new RuntimeException("Excess output");
     }
