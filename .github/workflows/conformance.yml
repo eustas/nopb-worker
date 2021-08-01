@@ -25,7 +25,7 @@ jobs:
           echo "unzip nopb-worker/corpus.zip -d ${RUNNER_TEMP}/conformance-corpus"
           cd ${GITHUB_WORKSPACE}/conformance
           bazel run --config=jazzer //:ConformanceChecker_run -- \
-            --timeout_secs=600 \
+            --timeout_secs=3600 \
             --fuzzing_output_root=${RUNNER_TEMP}/new-corpus \
             --corpus_dir=${RUNNER_TEMP}/conformance-corpus
 
