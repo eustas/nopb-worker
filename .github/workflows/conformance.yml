@@ -15,16 +15,16 @@ jobs:
       - name: Build
         run: |
           cd ${GITHUB_WORKSPACE}/conformance
-          bazel build --config=jazzer //:Fuzzer_run
+          bazel build --config=jazzer //:ConformanceChecker_run
 
       - name: Conformance Test
         run: |
           mkdir -p ${RUNNER_TEMP}/conformance-corpus
           cd ${RUNNER_TEMP}
-          git clone --branch fuzzer-corpus --depth=1 https://github.com/eustas/nopb-worker.git
+          git clone --branch conformance-corpus --depth=1 https://github.com/eustas/nopb-worker.git
           unzip nopb-worker/corpus.zip -d ${RUNNER_TEMP}/conformance-corpus
           cd ${GITHUB_WORKSPACE}/conformance
-          bazel run --config=jazzer //:Fuzzer_run -- \
+          bazel run --config=jazzer //:ConformanceChecker_run -- \
             --timeout_secs=600 \
             --fuzzing_output_root=${RUNNER_TEMP}/new-corpus \
             --corpus_dir=${RUNNER_TEMP}/conformance-corpus
