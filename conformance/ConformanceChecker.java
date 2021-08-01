@@ -24,7 +24,7 @@ public class ConformanceChecker {
   }
 
   static int readNumber(ByteBuffer input, int maxBits) {
-    int bits = input.getShort() % maxBits;
+    int bits = input.getShort() % (maxBits + 1);
     if (bits == 0) return 0;
     int result = input.getInt();
     result |= 0x80000000;
@@ -46,12 +46,12 @@ public class ConformanceChecker {
       origBuilder.setCancel((input.get() & 1) != 0);
       int numArguments = readNumber(input, 8);
       for (int i = 0; i < numArguments; ++i) {
-        origBuilder.addArguments(new String(makeBlob(rng, input, 16), StandardCharsets.UTF_8));
+        origBuilder.addArguments(new String(makeBlob(rng, input, 14), StandardCharsets.UTF_8));
       }
-      int numInputs = readNumber(input, 10);
+      int numInputs = readNumber(input, 8);
       for (int i = 0; i < numInputs; ++i) {
         WorkerProtocol.Input.Builder inputBuilder = WorkerProtocol.Input.newBuilder();
-        inputBuilder.setPath(new String(makeBlob(rng, input, 12), StandardCharsets.UTF_8));
+        inputBuilder.setPath(new String(makeBlob(rng, input, 14), StandardCharsets.UTF_8));
         inputBuilder.setDigest(com.google.protobuf.ByteString.copyFrom(makeBlob(rng, input, 8)));
         origBuilder.addInputs(inputBuilder);
       }
@@ -112,7 +112,7 @@ public class ConformanceChecker {
       orig.exitCode = input.getInt();
       orig.requestId = input.getInt();
       orig.wasCancelled = ((input.get() & 1) != 0);
-      orig.output = new String(makeBlob(rng, input, 23), StandardCharsets.UTF_8);
+      orig.output = new String(makeBlob(rng, input, 14), StandardCharsets.UTF_8);
     } catch (BufferUnderflowException ex) {
       // Okay, input is too short.
       return;
