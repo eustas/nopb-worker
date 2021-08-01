@@ -112,7 +112,7 @@ public class ConformanceChecker {
       orig.exitCode = input.getInt();
       orig.requestId = input.getInt();
       orig.wasCancelled = ((input.get() & 1) != 0);
-      orig.output = new String(makeBlob(rng, input, 27), StandardCharsets.UTF_8);
+      orig.output = new String(makeBlob(rng, input, 24), StandardCharsets.UTF_8);
     } catch (BufferUnderflowException ex) {
       // Okay, input is too short.
       return;
