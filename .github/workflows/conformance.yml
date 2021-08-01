@@ -1,0 +1,36 @@
+name: Conformance
+on: [push]
+jobs:
+
+  conformance:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v2
+
+      - uses: bazelbuild/setup-bazelisk@v1
+
+      - name: Install deps
+        run: sudo apt-get install clang libunwind-dev libblocksruntime-dev
+
+      - name: Build
+        run: |
+          cd ${GITHUB_WORKSPACE}/conformance
+          bazel build --config=jazzer //:Fuzzer_run
+
+      - name: Conformance Test
+        run: |
+          mkdir -p ${RUNNER_TEMP}/conformance-corpus
+          cd ${RUNNER_TEMP}
+          git clone --branch fuzzer-corpus --depth=1 https://github.com/eustas/nopb-worker.git
+          unzip nopb-worker/corpus.zip -d ${RUNNER_TEMP}/conformance-corpus
+          cd ${GITHUB_WORKSPACE}/conformance
+          bazel run --config=jazzer //:Fuzzer_run -- \
+            --timeout_secs=600 \
+            --fuzzing_output_root=${RUNNER_TEMP}/new-corpus \
+            --corpus_dir=${RUNNER_TEMP}/conformance-corpus
+
+      - uses: actions/upload-artifact@v2
+        with:
+          name: conformance-corpus
+          path: ${{ runner.temp }}/new-corpus/corpus
+          if-no-files-found: error
