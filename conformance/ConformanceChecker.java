@@ -38,7 +38,8 @@ public class ConformanceChecker {
   }
 
   static void checkRequest(ByteBuffer input) throws IOException {
-    var origBuilder = com.google.devtools.build.lib.worker.WorkerProtocol.WorkRequest.newBuilder();
+    com.google.devtools.build.lib.worker.WorkerProtocol.WorkRequest.Builder origBuilder =
+        com.google.devtools.build.lib.worker.WorkerProtocol.WorkRequest.newBuilder();
     try {
       Random rng = new Random(input.getLong());
       origBuilder.setRequestId(input.getInt());
@@ -49,7 +50,8 @@ public class ConformanceChecker {
       }
       int numInputs = readNumber(input, 10);
       for (int i = 0; i < numInputs; ++i) {
-        var inputBuilder = com.google.devtools.build.lib.worker.WorkerProtocol.Input.newBuilder();
+        com.google.devtools.build.lib.worker.WorkerProtocol.Input.Builder inputBuilder =
+            com.google.devtools.build.lib.worker.WorkerProtocol.Input.newBuilder();
         inputBuilder.setPath(new String(makeBlob(rng, input, 12), StandardCharsets.UTF_8));
         inputBuilder.setDigest(com.google.protobuf.ByteString.copyFrom(makeBlob(rng, input, 8)));
         origBuilder.addInputs(inputBuilder);
@@ -58,7 +60,7 @@ public class ConformanceChecker {
       // Okay, input is too short.
       return;
     }
-    var orig = origBuilder.build();
+    com.google.devtools.build.lib.worker.WorkerProtocol.WorkRequest orig = origBuilder.build();
 
     ByteArrayOutputStream serialized = new ByteArrayOutputStream();
     orig.writeDelimitedTo(serialized);
@@ -95,7 +97,8 @@ public class ConformanceChecker {
       int numInputs = deserialized.inputs.size();
       for (int i = 0; i < numInputs; ++i) {
         WorkRequest.Input deserializedInput = deserialized.inputs.get(i);
-        var origInput = orig.getInputsList().get(i);
+        com.google.devtools.build.lib.worker.WorkerProtocol.Input origInput =
+            orig.getInputsList().get(i);
         if (!Objects.equals(deserializedInput.path, origInput.getPath()) ||
             !Objects.deepEquals(deserializedInput.digest, origInput.getDigest().toByteArray())) {
           throw new RuntimeException("Deserilized object does not match original one");
