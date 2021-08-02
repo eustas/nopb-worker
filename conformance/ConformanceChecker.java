@@ -12,6 +12,9 @@ import java.util.Objects;
 import java.util.Random;
 
 public class ConformanceChecker {
+
+  private static final String ROUNDTRIP_FAILURE = "Deserialized object does not match original one";
+
   public static void fuzzerTestOneInput(byte[] data) throws IOException {
     if (data.length == 0)
       return;
@@ -86,11 +89,11 @@ public class ConformanceChecker {
     if ((deserialized.requestId != orig.getRequestId()) ||
         (deserialized.cancel != orig.getCancel()) ||
         !Arrays.deepEquals(deserialized.arguments.toArray(), orig.getArgumentsList().toArray())) {
-      throw new RuntimeException("Deserilized object does not match original one");
+      throw new RuntimeException(ROUNDTRIP_FAILURE);
     }
 
     if (deserialized.inputs.size() != orig.getInputsList().size()) {
-      throw new RuntimeException("Deserilized object does not match original one");
+      throw new RuntimeException(ROUNDTRIP_FAILURE);
     }
     {
       int numInputs = deserialized.inputs.size();
@@ -99,7 +102,7 @@ public class ConformanceChecker {
         WorkerProtocol.Input origInput = orig.getInputsList().get(i);
         if (!Objects.equals(deserializedInput.path, origInput.getPath()) ||
             !Objects.deepEquals(deserializedInput.digest, origInput.getDigest().toByteArray())) {
-          throw new RuntimeException("Deserilized object does not match original one");
+          throw new RuntimeException(ROUNDTRIP_FAILURE);
         }
       }
     }
@@ -132,7 +135,7 @@ public class ConformanceChecker {
         !Objects.equals(orig.output, deserialized.getOutput()) ||
         (orig.requestId != deserialized.getRequestId()) ||
         (orig.wasCancelled != deserialized.getWasCancelled())) {
-      throw new RuntimeException("Deserilized object does not match original one");
+      throw new RuntimeException(ROUNDTRIP_FAILURE);
     }
   }
 }
