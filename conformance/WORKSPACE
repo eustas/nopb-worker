@@ -20,9 +20,9 @@ rules_proto_toolchains()
 
 http_archive(
     name = "rules_fuzzing",
-    sha256 = "5e51c8b51b01a124ce967cbf64aa18ee40488feb42bfa91911b2fa7c48c417c1",
-    strip_prefix = "rules_fuzzing-2548aeae56e911b09b2ea879b94f30ae3a01dc50",
-    urls = ["https://github.com/bazelbuild/rules_fuzzing/archive/2548aeae56e911b09b2ea879b94f30ae3a01dc50.zip"],
+    sha256 = "eb0d78cefac6880657f03de7f6198d6ba659baf9ede723ab0c862f2bcb8e972f",
+    strip_prefix = "rules_fuzzing-9775cd58b85a464e969e8a0734c7ffef28036583",
+    urls = ["https://github.com/bazelbuild/rules_fuzzing/archive/9775cd58b85a464e969e8a0734c7ffef28036583.zip"],
 )
 
 load("@rules_fuzzing//fuzzing:repositories.bzl", "rules_fuzzing_dependencies")

@@ -27,7 +27,8 @@ jobs:
           bazel run --config=jazzer //:Fuzzer_run -- \
             --timeout_secs=600 \
             --fuzzing_output_root=${RUNNER_TEMP}/new-corpus \
-            --corpus_dir=${RUNNER_TEMP}/fuzzing-corpus
+            --corpus_dir=${RUNNER_TEMP}/fuzzing-corpus \
+            -- -fork=2
 
       - uses: actions/upload-artifact@v2
         with:
