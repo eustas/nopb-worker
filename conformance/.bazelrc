@@ -1,6 +1,6 @@
 # Force the use of Clang for all builds (needed to build Jazzer).
-build --action_env=CC=clang-10
-build --action_env=CXX=clang++-10
+build --action_env=CC=clang-11
+build --action_env=CXX=clang++-11
 
 # Define --config=jazzer for Jazzer without sanitizer (Java only).
 build:jazzer --@rules_fuzzing//fuzzing:java_engine=@rules_fuzzing//fuzzing/engines:jazzer

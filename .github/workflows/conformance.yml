@@ -27,7 +27,9 @@ jobs:
           bazel run --config=jazzer //:ConformanceChecker_run -- \
             --timeout_secs=600 \
             --fuzzing_output_root=${RUNNER_TEMP}/new-corpus \
-            --corpus_dir=${RUNNER_TEMP}/conformance-corpus
+            --corpus_dir=${RUNNER_TEMP}/conformance-corpus \
+            -- -fork=2
+          touch ${RUNNER_TEMP}/new-corpus/corpus/nothing
 
       - uses: actions/upload-artifact@v2
         with:
